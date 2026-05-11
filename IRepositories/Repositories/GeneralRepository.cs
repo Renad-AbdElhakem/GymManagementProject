@@ -4,10 +4,11 @@ using GymManagement.Domain;
 using GymManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace GymManagement.IRepositories.Repositories
 {
-    public class GeneralRepository<T> : IGeneralRepository<T> where T : BaseUser
+    public class GeneralRepository<T> : IGeneralRepository<T> where T : BaseEntity
     {
         private readonly ApplicationDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
@@ -26,8 +27,6 @@ namespace GymManagement.IRepositories.Repositories
             return entity;
         }
 
-
-
         public async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
@@ -42,13 +41,16 @@ namespace GymManagement.IRepositories.Repositories
                 query = query.Include(include);
             }
 
-            return await query.FirstOrDefaultAsync(x => x.Id == x.Id);
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> GetAll(params Expression<Func<T, object>>[] includes)
         {
             var query = _dbSet.AsQueryable();
-            query = query.Include(e => e.Role);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
             return await query.ToListAsync();
         }
     }

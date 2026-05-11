@@ -1,5 +1,6 @@
 ﻿using GymManagement.Data;
 using GymManagement.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymManagement.IRepositories.Repositories
 {
@@ -10,6 +11,13 @@ namespace GymManagement.IRepositories.Repositories
         public EmployeeRepository(ApplicationDbContext dbContext):base(dbContext)
         {
            _dbContext = dbContext;
+        }
+
+        public async Task<List<Employee>> GetAllEmployeeWithRole()
+        {
+            var query = _dbSet.AsQueryable();
+            query = query.Include(e => e.Role);
+            return await query.ToListAsync();
         }
     }
 }

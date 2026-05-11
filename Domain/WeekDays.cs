@@ -1,8 +1,8 @@
 ﻿namespace GymManagement.Domain
 {
-    public class WeekDays
+    public class WeekDays:BaseEntity
     {
-        public int Id { get; set; }
+      
         public string DayName { get; set; }
         public DateOnly DateOnly { get; set; }
 

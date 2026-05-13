@@ -71,6 +71,18 @@ namespace GymManagement.IServices.Services
             return GeneralResponse<CourseDto>.Succsess(co);
 
         }
+        public async Task<GeneralResponse<CourseDto>> GetClassByName(string className)
+        {
+
+            var course = await _courseRepository.SearchCourseByName(className);
+            var co = _mapper.Map<CourseDto>(course);
+
+            if (co == null)
+                return GeneralResponse<CourseDto>.ErrorResponse("Course Not Found");
+
+            return GeneralResponse<CourseDto>.Succsess(co);
+
+        }
 
 
 

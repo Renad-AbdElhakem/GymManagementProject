@@ -9,6 +9,7 @@ namespace GymManagement.IServices
         Task<GeneralResponse<List<CourseDto>>> GetAllCourse();
         Task<GeneralResponse<AssignCoachCourseDto>> UpdateCourseWithAssignCoah(AssignCoachCourseDto assignCoach);
         Task<GeneralResponse<CourseDto>> GetCourseById(int id);
+        Task<GeneralResponse<CourseDto>> GetClassByName(string className);
 
 
     }

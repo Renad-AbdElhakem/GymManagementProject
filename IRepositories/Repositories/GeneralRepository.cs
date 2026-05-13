@@ -53,5 +53,9 @@ namespace GymManagement.IRepositories.Repositories
             }
             return await query.ToListAsync();
         }
+
+
+       
+
     }
 }

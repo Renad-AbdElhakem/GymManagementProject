@@ -4,9 +4,9 @@
     {
       
         public string DayName { get; set; }
-        public DateOnly DateOnly { get; set; }
-
+      
         public ICollection<Scheduling> ?Schedulings { get; set; } = new List<Scheduling>();
+        public ICollection<ReceptionShiftScheduling> ? shiftSchedulings { get; set; } = new List<ReceptionShiftScheduling>();
 
     }
 }

@@ -11,10 +11,12 @@ namespace GymManagement.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _courseService;
+        private readonly ISchedulingService _schedulingService;
 
-        public CourseController(ICourseService courseService)
+        public CourseController(ICourseService courseService, ISchedulingService schedulingService)
         {
             _courseService = courseService;
+            _schedulingService = schedulingService;
         }
 
 
@@ -27,9 +29,9 @@ namespace GymManagement.Controllers
                 return BadRequest(new { message = result.Message });
             }
 
-           return CreatedAtAction(
-                   nameof(GetCourseById),
-                   new { id = result.Data.Id });
+            return CreatedAtAction(
+                    nameof(GetCourseById),
+                    new { id = result.Data.Id });
         }
 
 
@@ -67,11 +69,22 @@ namespace GymManagement.Controllers
 
             if (!findCourse.Success)
                 return NotFound(new { Message = findCourse.Message });
-            
+
             return Ok(findCourse.Data);
 
         }
 
+
+        [HttpGet("{classId}/Scheduling")]
+        public async Task<ActionResult<List<SchedulingDto>>> GetClassScheduling(int classId)
+        {
+            var schedulingList = await _schedulingService.SchedulingByClassId(classId);
+            if (!schedulingList.Success)
+                return NotFound(new { Message = schedulingList.Message });
+
+            return Ok(schedulingList.Data);
+
+        }
 
 
     }

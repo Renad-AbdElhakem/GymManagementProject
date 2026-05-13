@@ -27,6 +27,8 @@ namespace GymManagement
             {
                 cfg.AddProfile<EmployeeProfile>();
                 cfg.AddProfile<CourseProfile>();
+                cfg.AddProfile<WeekDaysProfile>();
+                cfg.AddProfile<SchedulingProfile>();
             });
 
             builder.Services.AddDbContext<ApplicationDbContext>(option=>
@@ -34,6 +36,8 @@ namespace GymManagement
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<IWeekDaysRepository, WeekDaysRepository>();
+            builder.Services.AddScoped<ISchedulingRepository,SchedulingRepository>();
            
             
             
@@ -41,6 +45,8 @@ namespace GymManagement
             
             builder.Services.AddScoped<IEmployeeService, EmployeesService>();
             builder.Services.AddScoped<ICourseService,CourseService>();
+            builder.Services.AddScoped<IWeekDaysService, WeekDaysService>();
+            builder.Services.AddScoped<ISchedulingService,SchedulingService>();
 
           
             

@@ -4,6 +4,7 @@ using GymManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260511143631_EditeWeekDaysTable")]
+    partial class EditeWeekDaysTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,35 +159,6 @@ namespace GymManagement.Migrations
                     b.ToTable("MemberAttendances");
                 });
 
-            modelBuilder.Entity("GymManagement.Domain.ReceptionShiftScheduling", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<int?>("WeekDaysId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("WeekDaysId");
-
-                    b.ToTable("ReceptionShiftScheduling");
-                });
-
             modelBuilder.Entity("GymManagement.Domain.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -313,7 +287,7 @@ namespace GymManagement.Migrations
                             PhoneNumber = "010555454545",
                             RoleId = 1,
                             UserName = "RenadAbdelhakem",
-                            HireDate = new DateOnly(2026, 5, 12),
+                            HireDate = new DateOnly(2026, 5, 11),
                             IsActive = true,
                             Salary = 0m
                         });
@@ -387,21 +361,6 @@ namespace GymManagement.Migrations
                     b.Navigation("MembershipPlans");
                 });
 
-            modelBuilder.Entity("GymManagement.Domain.ReceptionShiftScheduling", b =>
-                {
-                    b.HasOne("GymManagement.Domain.Employee", "Employee")
-                        .WithMany("shiftSchedulings")
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("GymManagement.Domain.WeekDays", "WeekDays")
-                        .WithMany("shiftSchedulings")
-                        .HasForeignKey("WeekDaysId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("WeekDays");
-                });
-
             modelBuilder.Entity("GymManagement.Domain.Scheduling", b =>
                 {
                     b.HasOne("GymManagement.Domain.Course", "Course")
@@ -454,8 +413,6 @@ namespace GymManagement.Migrations
             modelBuilder.Entity("GymManagement.Domain.WeekDays", b =>
                 {
                     b.Navigation("Schedulings");
-
-                    b.Navigation("shiftSchedulings");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Employee", b =>
@@ -465,8 +422,6 @@ namespace GymManagement.Migrations
                     b.Navigation("EmployeeAttendancecs");
 
                     b.Navigation("Schedulings");
-
-                    b.Navigation("shiftSchedulings");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Member", b =>

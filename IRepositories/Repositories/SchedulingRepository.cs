@@ -24,9 +24,7 @@ namespace GymManagement.IRepositories.Repositories
             }
 
            return await query.Where(s=>s.WeekDaysId==dayId).ToListAsync();
-           
-
-
+          
         }
         public async Task<List<Scheduling?>> SchedulingByClassId(int classId,params Expression<Func<Scheduling, object>>[] includes)
                                                                              

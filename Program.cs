@@ -1,4 +1,5 @@
 
+using FluentValidation;
 using GymManagement.AutoMapper;
 using GymManagement.Data;
 using GymManagement.IRepositories;
@@ -25,29 +26,35 @@ namespace GymManagement
 
             builder.Services.AddAutoMapper(cfg =>
             {
+                cfg.AddProfile<RoleProfile>();
                 cfg.AddProfile<EmployeeProfile>();
                 cfg.AddProfile<CourseProfile>();
                 cfg.AddProfile<WeekDaysProfile>();
                 cfg.AddProfile<SchedulingProfile>();
+              
             });
 
             builder.Services.AddDbContext<ApplicationDbContext>(option=>
             option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IWeekDaysRepository, WeekDaysRepository>();
             builder.Services.AddScoped<ISchedulingRepository,SchedulingRepository>();
-           
-            
-            
-            
-            
+
+
+
+
+
+            builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IEmployeeService, EmployeesService>();
             builder.Services.AddScoped<ICourseService,CourseService>();
             builder.Services.AddScoped<IWeekDaysService, WeekDaysService>();
             builder.Services.AddScoped<ISchedulingService,SchedulingService>();
-
+           
           
             
             

@@ -20,7 +20,7 @@ namespace GymManagement.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<WeekDays> WeekDays { get; set; }
         public DbSet<Scheduling> Schedulings { get; set; }
-        public DbSet<ReceptionShiftScheduling> ReceptionShiftScheduling { get; set; }
+       // public DbSet<ReceptionShiftScheduling> ReceptionShiftScheduling { get; set; }
        
         
         

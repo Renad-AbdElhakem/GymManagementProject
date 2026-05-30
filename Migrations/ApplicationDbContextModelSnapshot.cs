@@ -76,7 +76,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.EmployeeAttendance", b =>
@@ -124,7 +124,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeAttendance");
+                    b.ToTable("EmployeeAttendance", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.MemberAttendance", b =>
@@ -153,36 +153,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("MembershipPlansId");
 
-                    b.ToTable("MemberAttendances");
-                });
-
-            modelBuilder.Entity("GymManagement.Domain.ReceptionShiftScheduling", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<int?>("WeekDaysId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("WeekDaysId");
-
-                    b.ToTable("ReceptionShiftScheduling");
+                    b.ToTable("MemberAttendances", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Role", b =>
@@ -199,7 +170,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -240,7 +211,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("WeekDaysId");
 
-                    b.ToTable("Schedulings");
+                    b.ToTable("Schedulings", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.SubscriptionType", b =>
@@ -267,7 +238,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionTypes");
+                    b.ToTable("SubscriptionTypes", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.WeekDays", b =>
@@ -284,7 +255,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WeekDays");
+                    b.ToTable("WeekDays", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Employee", b =>
@@ -303,7 +274,7 @@ namespace GymManagement.Migrations
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,2)");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employee", (string)null);
 
                     b.HasData(
                         new
@@ -313,7 +284,7 @@ namespace GymManagement.Migrations
                             PhoneNumber = "010555454545",
                             RoleId = 1,
                             UserName = "RenadAbdelhakem",
-                            HireDate = new DateOnly(2026, 5, 12),
+                            HireDate = new DateOnly(2026, 5, 11),
                             IsActive = true,
                             Salary = 0m
                         });
@@ -340,7 +311,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("MembershipPlansId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("GymManagement.Domain.BaseUser", b =>
@@ -385,21 +356,6 @@ namespace GymManagement.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("MembershipPlans");
-                });
-
-            modelBuilder.Entity("GymManagement.Domain.ReceptionShiftScheduling", b =>
-                {
-                    b.HasOne("GymManagement.Domain.Employee", "Employee")
-                        .WithMany("shiftSchedulings")
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("GymManagement.Domain.WeekDays", "WeekDays")
-                        .WithMany("shiftSchedulings")
-                        .HasForeignKey("WeekDaysId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("WeekDays");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Scheduling", b =>
@@ -454,8 +410,6 @@ namespace GymManagement.Migrations
             modelBuilder.Entity("GymManagement.Domain.WeekDays", b =>
                 {
                     b.Navigation("Schedulings");
-
-                    b.Navigation("shiftSchedulings");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Employee", b =>
@@ -465,8 +419,6 @@ namespace GymManagement.Migrations
                     b.Navigation("EmployeeAttendancecs");
 
                     b.Navigation("Schedulings");
-
-                    b.Navigation("shiftSchedulings");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Member", b =>

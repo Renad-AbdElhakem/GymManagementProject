@@ -13,6 +13,7 @@ namespace GymManagement.IServices.Services
         private readonly ISchedulingRepository _schedulingRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ICourseService _courseService;
+        private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
         private readonly IWeekDaysRepository _dayRepository;
 
@@ -20,16 +21,21 @@ namespace GymManagement.IServices.Services
                                  IWeekDaysRepository dayRepository,
                                  IEmployeeRepository employeeRepository,
                                  ICourseService courseService,
+                                 IRoleService roleService,
                                  IMapper mapper)
         {
             _schedulingRepository = schedulingRepository;
             _dayRepository = dayRepository;
             _employeeRepository = employeeRepository;
             _courseService = courseService;
+            _roleService = roleService;
             _mapper = mapper;
         }
 
-        public async Task<GeneralResponse<SchedulingDto>> CreateDayScheduling(CreateSchedulingDto createSchedulingDto)
+
+
+
+        public async Task<GeneralResponse<SchedulingDto>> CreateTrainerDayScheduling(CreateSchedulingDto createSchedulingDto)
         {
             var findDay = await _dayRepository.SearchByName(createSchedulingDto.DayName);
             if (findDay == null)
@@ -37,11 +43,6 @@ namespace GymManagement.IServices.Services
 
             var findEmployee = await _employeeRepository.GetTById(createSchedulingDto.EmployeeId);
             if (findEmployee == null)
-                return GeneralResponse<SchedulingDto>.ErrorResponse("Employee not found");
-
-            var findClass = await _courseService.GetClassByName(createSchedulingDto.ClassName);
-
-            if (findClass == null)
                 return GeneralResponse<SchedulingDto>.ErrorResponse("Employee not found");
 
 
@@ -52,9 +53,18 @@ namespace GymManagement.IServices.Services
                 EndTime = createSchedulingDto.EndTime,
                 WeekDaysId = findDay.Id,
                 EmployeeId = findEmployee.Id,
-                CourseId = findClass.Data.Id
-
             };
+
+            if (!string.IsNullOrEmpty(createSchedulingDto.ClassName))
+            {
+                var findClass = await _courseService.GetClassByName(createSchedulingDto.ClassName);
+
+                if (!findClass.Success)
+                    return GeneralResponse<SchedulingDto>.ErrorResponse("class not found");
+
+                addScheduling.CourseId = findClass.Data.Id;
+            }
+
 
             await _schedulingRepository.CreateNewAsync(addScheduling);
             var schedullingDto = _mapper.Map<SchedulingDto>(addScheduling);
@@ -92,7 +102,34 @@ namespace GymManagement.IServices.Services
 
             return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDro);
         }
+        
+        public async Task<GeneralResponse<List<SchedulingDto>>> GetSchedulingByRoleId(int roleId)
+        {
+            var checkRoleId = await _roleService.GetRoleById(roleId);
+            if (!checkRoleId.Success)
+                return GeneralResponse<List<SchedulingDto>>.ErrorResponse("Not found role");
 
+            List<Scheduling>? schedulingList;
+
+            if (checkRoleId.Data.RoleName.Contains("Trainer"))
+            {
+                schedulingList = await _schedulingRepository.GetAllByCondition(
+                    r => r.Employee.RoleId == roleId,
+                    x => x.Course, x => x.WeekDays);
+            }
+            else
+            {
+                schedulingList = await _schedulingRepository.GetAllByCondition(
+                    r => r.Employee.RoleId == roleId,
+                    x => x.WeekDays);
+            }
+
+            if (schedulingList == null)
+                return GeneralResponse<List<SchedulingDto>>.ErrorResponse("Empty scheduling");
+
+            var schedulingListDto = _mapper.Map<List<SchedulingDto>>(schedulingList);
+            return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDto);
+        }
         public async Task<GeneralResponse<SchedulingDto>> UpdateSchedullingById(int schedulingId, UpdateSchedulingDto updateSchedulingDto)
         {
             var scheduling = await _schedulingRepository.GetTById(schedulingId);
@@ -105,7 +142,7 @@ namespace GymManagement.IServices.Services
                     return GeneralResponse<SchedulingDto>.ErrorResponse("Day not found");
                 scheduling.WeekDaysId = findDay.Id;
             }
-         
+
             if (!string.IsNullOrEmpty(updateSchedulingDto.ClassName))
             {
 
@@ -114,9 +151,9 @@ namespace GymManagement.IServices.Services
                     return GeneralResponse<SchedulingDto>.ErrorResponse("Employee not found");
                 scheduling.CourseId = findClass.Data.Id;
             }
-          
+
             await _schedulingRepository.UpdateAsync(scheduling);
-            
+
             var schedullingDto = _mapper.Map<SchedulingDto>(scheduling);
 
             return GeneralResponse<SchedulingDto>.Succsess(schedullingDto);

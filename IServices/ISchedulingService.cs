@@ -6,7 +6,8 @@ namespace GymManagement.IServices
 {
     public interface ISchedulingService
     {
-        Task<GeneralResponse<SchedulingDto>> CreateDayScheduling(CreateSchedulingDto createSchedulingDto);
+        Task<GeneralResponse<SchedulingDto>> CreateTrainerDayScheduling(CreateSchedulingDto createSchedulingDto);
+        Task<GeneralResponse<List<SchedulingDto>>> GetSchedulingByRoleId(int roleId);
         Task<GeneralResponse<SchedulingDto>> SchedullingById(int id);
         Task<GeneralResponse<List<SchedulingDto>>>SchedullingList();
         Task<GeneralResponse<SchedulingDto>> DeleteSchedullingById(int id);

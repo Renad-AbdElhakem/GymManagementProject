@@ -1,4 +1,5 @@
-﻿using GymManagement.Data;
+﻿using FluentValidation;
+using GymManagement.Data;
 using GymManagement.Dtos;
 using GymManagement.IServices;
 using Microsoft.AspNetCore.Http;
@@ -13,15 +14,33 @@ namespace GymManagement.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IValidator<AddNewEmployeeDto> _validator;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IValidator<AddNewEmployeeDto> validator)
         {
             _employeeService = employeeService;
+            _validator = validator;
         }
 
         [HttpPost]
         public async Task<ActionResult> AddNewEmployee(AddNewEmployeeDto newEmployeeDto)
         {
+
+            var validationResult = await _validator.ValidateAsync(newEmployeeDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(
+                    new
+                    {
+                        Errors = validationResult.Errors.Select(e =>
+                        new
+                        {
+                            PropertyField = e.PropertyName,
+                            Message = e.ErrorMessage,
+                        })
+                  });
+
+            }
 
             var employee = await _employeeService.AddNewEmployee(newEmployeeDto);
 
@@ -32,19 +51,19 @@ namespace GymManagement.Controllers
 
         }
 
-      
+
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDto>> GetEmployeeById(int id)
         {
             var employee = await _employeeService.GetEmployeeById(id);
-          
-            if (employee == null)  
-                return BadRequest($"Not found employee with Id: {id}"); 
-           
+
+            if (employee == null)
+                return BadRequest($"Not found employee with Id: {id}");
+
             return Ok(employee);
         }
 
-     
+
         [HttpGet]
         public async Task<ActionResult<List<EmployeeDto>>> GetAllEmployee()
         {

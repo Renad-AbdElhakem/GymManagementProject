@@ -17,13 +17,15 @@ namespace GymManagement.Controllers
             _schedulingService = schedulingService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddnewSchedullind(CreateSchedulingDto createSchedulingDto)
+        [HttpPost("TrainerSchedulling")]
+        public async Task<ActionResult> CreateTrainerSchedulling(CreateSchedulingDto createSchedulingDto)
         {
 
-            var schaduling = await _schedulingService.CreateDayScheduling(createSchedulingDto);
-            return Ok(schaduling);
+            var schaduling = await _schedulingService.CreateTrainerDayScheduling(createSchedulingDto);
+            return Ok(schaduling.Data);
         }
+
+       
 
         [HttpGet]
         public async Task<ActionResult<List<SchedulingDto>>> GetAllSchedulingList()
@@ -71,7 +73,15 @@ namespace GymManagement.Controllers
            
             return Ok(scheduling.Data);
         }
-
+       
+        [HttpGet("scheduling/{roleId}")]
+        public async Task<IActionResult> GetSchedulingByRoleId(int roleId)
+        {
+            var result = await _schedulingService.GetSchedulingByRoleId(roleId);
+            if (!result.Success)
+                return NotFound(result);
+            return Ok(result);
+        }
 
     }
 }

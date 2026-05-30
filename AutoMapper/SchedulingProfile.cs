@@ -12,9 +12,13 @@ namespace GymManagement.AutoMapper
             CreateMap<Scheduling, SchedulingDto>()
                     .ForMember(dest => dest.DayName,
                        opt => opt.MapFrom(src => src.WeekDays.DayName))
-                
+
                    .ForMember(dest => dest.ClassName,
                       opt => opt.MapFrom(src => src.Course.CourseName));
+
+            CreateMap<Scheduling, ReceptionShiftSchedulingDto>()
+               .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.UserName))
+               .ForMember(dest => dest.DayName, opt => opt.MapFrom(src => src.WeekDays.DayName));
         }
     }
 }

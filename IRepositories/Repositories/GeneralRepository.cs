@@ -54,8 +54,35 @@ namespace GymManagement.IRepositories.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<List<T>> SchedulingByDayId(int dayId, params Expression<Func<T, object>>[] includes)
 
-       
+        {
+
+            var query = _dbSet.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.Where(s => s.Id == dayId).ToListAsync();
+
+        }
+        public async Task<List<T>?> GetAllByCondition(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] Includes)
+        {
+            var query = _dbSet.AsQueryable();
+
+            if (Includes != null && Includes.Any())
+            {
+                foreach (var include in Includes)
+                {
+                    query = query.Include(include);
+                }
+                
+            }
+            var result =  await query.Where(condition).ToListAsync();
+            return result;
+
+        }
 
     }
 }

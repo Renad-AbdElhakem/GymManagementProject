@@ -32,6 +32,11 @@ namespace GymManagement.IRepositories.Repositories
             _dbSet.Update(entity);
             await _dbContext.SaveChangesAsync();
         }
+        public async Task Delete(T entity)
+        {
+            _dbSet.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
 
         public async Task<T?> GetTById(int id, params Expression<Func<T, object>>[] includes)
         {

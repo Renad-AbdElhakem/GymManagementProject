@@ -1,4 +1,6 @@
-﻿namespace GymManagement.Domain
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace GymManagement.Domain
 {
     public class GeneralResponse<T>
     {

@@ -31,6 +31,8 @@ namespace GymManagement
                 cfg.AddProfile<CourseProfile>();
                 cfg.AddProfile<WeekDaysProfile>();
                 cfg.AddProfile<SchedulingProfile>();
+                cfg.AddProfile<MemberProfile>();
+                cfg.AddProfile<SubscriptionTypeMappingProfile>();
               
             });
 
@@ -44,6 +46,8 @@ namespace GymManagement
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IWeekDaysRepository, WeekDaysRepository>();
             builder.Services.AddScoped<ISchedulingRepository,SchedulingRepository>();
+            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+            builder.Services.AddScoped<ISubscriptionTypeRepository, SubscriptionTypeRepository>();
 
 
 
@@ -54,6 +58,8 @@ namespace GymManagement
             builder.Services.AddScoped<ICourseService,CourseService>();
             builder.Services.AddScoped<IWeekDaysService, WeekDaysService>();
             builder.Services.AddScoped<ISchedulingService,SchedulingService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
            
           
             

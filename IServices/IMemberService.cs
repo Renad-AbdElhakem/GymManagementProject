@@ -10,5 +10,7 @@ namespace GymManagement.IServices
         Task<GeneralResponse<MemberDto>> GetMemberByIdService(int memberId);
         Task<GeneralResponse<List<MemberDto>>> GetAllMembersService();
         Task<GeneralResponse<MemberDto>> DeactivatedMemberByIdService(int memberId);
+        Task<GeneralResponse<MemberDto>> AssignPrivateTrainerAsync(int memberId, AssignTrainerDto privateMemberDto);
+    
     }
 }

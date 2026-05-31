@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Execution;
 using GymManagement.Domain;
 using GymManagement.Dtos;
 using GymManagement.IRepositories;
@@ -12,14 +13,16 @@ namespace GymManagement.IServices.Services
         private readonly IMapper _mapper;
         private readonly IRoleService _roleService;
         private readonly ISubscriptionTypeService _subscriptionTypeService;
+        private readonly IEmployeeService _employeeService;
 
         public MemberService(IMemberRepository memberRepository, IMapper mapper,
-            IRoleService roleService, ISubscriptionTypeService subscriptionTypeService)
+            IRoleService roleService, ISubscriptionTypeService subscriptionTypeService, IEmployeeService employeeService)
         {
             _memberRepository = memberRepository;
             _mapper = mapper;
             _roleService = roleService;
             _subscriptionTypeService = subscriptionTypeService;
+            _employeeService = employeeService;
         }
 
         public async Task<GeneralResponse<MemberDto>> RegisterMemberService(RegisterMemberDto registerMemberDto)
@@ -32,9 +35,17 @@ namespace GymManagement.IServices.Services
             if (!getSubscriptionType.Success)
                 return GeneralResponse<MemberDto>.ErrorResponse($"SubscriptionType with {registerMemberDto.MemberPlanId} not found ");
 
+            if (registerMemberDto.PrivateTrainerId.HasValue)
+            {
+                var findTrainer = await _employeeService.GetEmployeeById(registerMemberDto.PrivateTrainerId.GetValueOrDefault());
+                if (findTrainer == null || !findTrainer.IsActive)
+                    return GeneralResponse<MemberDto>.ErrorResponse($"Trainer with ID {registerMemberDto.PrivateTrainerId} is not found or not active");
+
+            }
             var startDate = DateOnly.FromDateTime(DateTime.Today);
 
-            var newMember = _mapper.Map<Member>(registerMemberDto);
+            var newMember = _mapper.Map<Domain.Member>(registerMemberDto);
+            //*************************
             newMember.AvailableDays = getSubscriptionType.Data.NumberOfDaysPerPlans;
             newMember.subscriptionStartDate = startDate;
             newMember.subscriptionEndDate = startDate.AddDays(getSubscriptionType.Data.NumberOfDaysPerPlans);
@@ -73,7 +84,8 @@ namespace GymManagement.IServices.Services
         public async Task<GeneralResponse<MemberDto>> GetMemberByIdService(int memberId)
         {
 
-            var findMember = await _memberRepository.GetTById(memberId, m => m.MembershipPlans);
+            var findMember = await _memberRepository.GetTById(memberId, x => x.MembershipPlans,
+                                                                       x => x.Employee);
             if (findMember == null)
                 return GeneralResponse<MemberDto>.ErrorResponse($"Member with {memberId} not found ");
 
@@ -105,7 +117,28 @@ namespace GymManagement.IServices.Services
 
 
 
+        public async Task<GeneralResponse<MemberDto>> AssignPrivateTrainerAsync(int memberId, AssignTrainerDto privateMemberDto)
+        {
+            
+            var member = await _memberRepository.GetTById(memberId, x => x.MembershipPlans, x => x.Employee);
 
+            if (member == null)
+                return GeneralResponse<MemberDto>.ErrorResponse($"Member with ID {memberId} not found.");
+
+           
+            var trainer = await _employeeService.GetEmployeeById(privateMemberDto.TrainerId);
+
+            if (trainer == null || !trainer.IsActive)
+                return GeneralResponse<MemberDto>.ErrorResponse($"Trainer with ID {privateMemberDto.TrainerId} is not found or not active.");
+
+            member.IsPrivateMember = true;
+            member.PrivateTrainerId = privateMemberDto.TrainerId;
+
+            await _memberRepository.UpdateAsync(member);
+
+            var memberDto = _mapper.Map<MemberDto>(member);
+            return GeneralResponse<MemberDto>.Succsess(memberDto);
+        }
 
 
 

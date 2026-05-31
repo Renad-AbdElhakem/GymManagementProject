@@ -55,9 +55,12 @@ namespace GymManagement.Controllers
             return member.Success ? Ok(member) : NotFound(member.Errors);
         }
 
-        
-    
-    
-    
+        [HttpPatch("{memberId}/assign-trainer")] 
+        public async Task<ActionResult> AssignTrainer(int memberId, [FromBody] AssignTrainerDto privateMemberDto)
+        {
+            var response = await _memberService.AssignPrivateTrainerAsync(memberId, privateMemberDto);
+            return response.Success ? Ok(response) : BadRequest(response.Message);
+            
+        }
     }
 }

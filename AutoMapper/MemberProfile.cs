@@ -9,8 +9,11 @@ namespace GymManagement.AutoMapper
         public MemberProfile()
         {
             CreateMap<RegisterMemberDto, Member>();
-            CreateMap<Member, MemberDto>().ForMember(dest => dest.MemberPlanName,
-                                                    opt => opt.MapFrom(src => src.MembershipPlans.PlanName));
+            CreateMap<Member, MemberDto>()
+                .ForMember(dest => dest.MemberPlanName,
+                           opt => opt.MapFrom(src => src.MembershipPlans.PlanName))
+                .ForMember(dest => dest.TrainerName,
+                           opt => opt.MapFrom(src => src.Employee.UserName));
         }
 
     }

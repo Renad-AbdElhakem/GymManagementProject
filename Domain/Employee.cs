@@ -12,6 +12,7 @@
         public ICollection<Course> ? Course { get; set; } = new List<Course>();
         public ICollection<EmployeeAttendance> ? EmployeeAttendancecs { get; set; } = new List<EmployeeAttendance>();
         public ICollection<Scheduling>? Schedulings { get; set; } = new List<Scheduling>();
+        public ICollection<Member>? PrivateMembers { get; set; } = new List<Member>();
        
 
     }

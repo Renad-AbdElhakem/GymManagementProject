@@ -4,6 +4,7 @@ using GymManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260601143103_AlterMemberAttendancRelation")]
+    partial class AlterMemberAttendancRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +79,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.EmployeeAttendance", b =>
@@ -124,7 +127,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("EmployeeAttendance", (string)null);
+                    b.ToTable("EmployeeAttendance");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.MemberAttendance", b =>
@@ -150,7 +153,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("MemberPlansId");
 
-                    b.ToTable("MemberAttendances", (string)null);
+                    b.ToTable("MemberAttendances");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Role", b =>
@@ -167,7 +170,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -208,7 +211,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("WeekDaysId");
 
-                    b.ToTable("Schedulings", (string)null);
+                    b.ToTable("Schedulings");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.SubscriptionType", b =>
@@ -235,7 +238,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SubscriptionTypes", (string)null);
+                    b.ToTable("SubscriptionTypes");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.WeekDays", b =>
@@ -252,7 +255,7 @@ namespace GymManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WeekDays", (string)null);
+                    b.ToTable("WeekDays");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.Employee", b =>
@@ -271,7 +274,7 @@ namespace GymManagement.Migrations
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,2)");
 
-                    b.ToTable("Employee", (string)null);
+                    b.ToTable("Employee");
 
                     b.HasData(
                         new
@@ -319,7 +322,7 @@ namespace GymManagement.Migrations
 
                     b.HasIndex("PrivateTrainerId");
 
-                    b.ToTable("Members", (string)null);
+                    b.ToTable("Members");
                 });
 
             modelBuilder.Entity("GymManagement.Domain.BaseUser", b =>

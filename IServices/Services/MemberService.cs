@@ -141,8 +141,16 @@ namespace GymManagement.IServices.Services
         }
 
 
+      // R   
+        public async Task UpdateAvailableDaysAsync(UpdateAvailableDaysForMemberDto dto)
+        {
+            var member = await _memberRepository.GetTById(dto.MemberId);
+            if (member is null) return;
 
-
+            member.AvailableDays = dto.AvailableDays;
+            await _memberRepository.UpdateAsync(member);
+        
+        }
 
 
 

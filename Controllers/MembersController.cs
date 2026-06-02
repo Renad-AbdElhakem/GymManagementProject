@@ -62,5 +62,13 @@ namespace GymManagement.Controllers
             return response.Success ? Ok(response) : BadRequest(response.Message);
             
         }
+
+
+        [HttpPatch("available-days")]
+        public async Task<IActionResult> UpdateAvailableDays([FromBody] UpdateAvailableDaysForMemberDto dto)
+        {
+            await _memberService.UpdateAvailableDaysAsync(dto);
+            return Ok(new { message = $"Available days updated for member {dto.MemberId}" });
+        }
     }
 }

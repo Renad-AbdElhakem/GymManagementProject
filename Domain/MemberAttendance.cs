@@ -1,9 +1,9 @@
 ﻿namespace GymManagement.Domain
 {
-    public class MemberAttendance
+    public class MemberAttendance:BaseEntity
     {
 
-        public int Id { get; set; }
+       
         public DateOnly Date { get; set; }
 
 

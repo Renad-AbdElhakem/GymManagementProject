@@ -33,6 +33,7 @@ namespace GymManagement
                 cfg.AddProfile<SchedulingProfile>();
                 cfg.AddProfile<MemberProfile>();
                 cfg.AddProfile<SubscriptionTypeMappingProfile>();
+                cfg.AddProfile<AttendanceMemberProfile>();
               
             });
 
@@ -48,6 +49,7 @@ namespace GymManagement
             builder.Services.AddScoped<ISchedulingRepository,SchedulingRepository>();
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<ISubscriptionTypeRepository, SubscriptionTypeRepository>();
+            builder.Services.AddScoped<IMemberAttendanceRepository, MemberAttendanceRepository>();
 
 
 
@@ -60,6 +62,7 @@ namespace GymManagement
             builder.Services.AddScoped<ISchedulingService,SchedulingService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
+            builder.Services.AddScoped<IMemberAttendanceService, MemberAttendanceService>();
            
           
             

@@ -1,4 +1,5 @@
-﻿using GymManagement.Dtos;
+﻿using FluentValidation;
+using GymManagement.Dtos;
 using GymManagement.IServices;
 using GymManagement.IServices.Services;
 using Microsoft.AspNetCore.Http;
@@ -11,16 +12,31 @@ namespace GymManagement.Controllers
     public class SchedulingController : ControllerBase
     {
         private readonly ISchedulingService _schedulingService;
+        private readonly IValidator<CreateSchedulingDto> _validator;
 
-        public SchedulingController(ISchedulingService schedulingService)
+        public SchedulingController(ISchedulingService schedulingService,IValidator<CreateSchedulingDto> validator)
         {
             _schedulingService = schedulingService;
+            _validator = validator;
         }
 
         [HttpPost("TrainerSchedulling")]
         public async Task<ActionResult> CreateTrainerSchedulling(CreateSchedulingDto createSchedulingDto)
         {
+            var validationResult = await _validator.ValidateAsync(createSchedulingDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(
+                    new
+                    {
+                        Errors = validationResult.Errors.Select(e =>
+                        new
+                        {
+                            Message = e.ErrorMessage,
+                        })
+                    });
 
+            }
             var schaduling = await _schedulingService.CreateTrainerDayScheduling(createSchedulingDto);
             return Ok(schaduling.Data);
         }

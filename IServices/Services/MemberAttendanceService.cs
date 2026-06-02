@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GymManagement.Domain;
 using GymManagement.Dtos;
 using GymManagement.IRepositories;

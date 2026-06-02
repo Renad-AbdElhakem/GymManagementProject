@@ -1,4 +1,5 @@
-﻿using GymManagement.Dtos;
+﻿using FluentValidation;
+using GymManagement.Dtos;
 using GymManagement.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace GymManagement.Controllers
     public class MemberAttendancesController : ControllerBase
     {
         private readonly IMemberAttendanceService _memberAttendanceService;
+        private readonly IValidator<CreateMemberAttendanceDto> _validator;
 
-        public MemberAttendancesController(IMemberAttendanceService memberAttendanceService)
+        public MemberAttendancesController(IMemberAttendanceService memberAttendanceService,IValidator<CreateMemberAttendanceDto> validator)
         {
             _memberAttendanceService = memberAttendanceService;
+            _validator = validator;
         }
 
 
@@ -21,6 +24,20 @@ namespace GymManagement.Controllers
         [HttpPost]
         public async Task<ActionResult<AttendanceDto>> CreateAttendanceMember(CreateMemberAttendanceDto createMemberDto)
         {
+            var validationResult = await _validator.ValidateAsync(createMemberDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(
+                    new
+                    {
+                        Errors = validationResult.Errors.Select(e =>
+                        new
+                        {
+                            Message = e.ErrorMessage,
+                        })
+                    });
+
+            }
             var newAttendance = await _memberAttendanceService.CreateMemberAttendanceAsync(createMemberDto);
             return newAttendance.Success ? Ok(newAttendance) : BadRequest(newAttendance);
         }

@@ -19,7 +19,7 @@ namespace GymManagement.Validation
 
 
             RuleFor(s => s)
-                .MustAsync(OverLappingTrainerScheduling)
+                .MustAsync(OverLappingEmployeeScheduling)
                 .WithMessage("OverLapping Trainer Scheduling");
 
             RuleFor(s => s)
@@ -40,7 +40,7 @@ namespace GymManagement.Validation
                                                .AnyAsync(t => t.Id == schedulingDto.EmployeeId
                                                 && t.Course.Any(c => c.CourseName.Contains(schedulingDto.ClassName)));
         }
-        private async Task<bool> OverLappingTrainerScheduling(CreateSchedulingDto schedulingDto, CancellationToken token)
+        private async Task<bool> OverLappingEmployeeScheduling(CreateSchedulingDto schedulingDto, CancellationToken token)
         {
 
             return await _dbContext.Schedulings.Where(s => s.EmployeeId == schedulingDto.EmployeeId)

@@ -37,12 +37,12 @@ namespace GymManagement.IServices.Services
 
         public async Task<GeneralResponse<SchedulingDto>> CreateTrainerDayScheduling(CreateSchedulingDto createSchedulingDto)
         {
-            var findDay = await _dayRepository.SearchByName(createSchedulingDto.DayName);
-            if (findDay == null)
+            var day = await _dayRepository.SearchByName(createSchedulingDto.DayName);
+            if (day == null)
                 return GeneralResponse<SchedulingDto>.ErrorResponse("Day not found");
 
-            var findEmployee = await _employeeRepository.GetTById(createSchedulingDto.EmployeeId);
-            if (findEmployee == null)
+            var employee = await _employeeRepository.GetTById(createSchedulingDto.EmployeeId);
+            if (employee == null)
                 return GeneralResponse<SchedulingDto>.ErrorResponse("Employee not found");
 
 
@@ -51,8 +51,8 @@ namespace GymManagement.IServices.Services
 
                 StartTime = createSchedulingDto.StartTime,
                 EndTime = createSchedulingDto.EndTime,
-                WeekDaysId = findDay.Id,
-                EmployeeId = findEmployee.Id,
+                WeekDaysId = day.Id,
+                EmployeeId = employee.Id,
             };
 
             if (!string.IsNullOrEmpty(createSchedulingDto.ClassName))
@@ -102,7 +102,7 @@ namespace GymManagement.IServices.Services
 
             return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDro);
         }
-        
+
         public async Task<GeneralResponse<List<SchedulingDto>>> GetSchedulingByRoleId(int roleId)
         {
             var checkRoleId = await _roleService.GetRoleById(roleId);
@@ -189,10 +189,21 @@ namespace GymManagement.IServices.Services
             if (schedulingList == null)
                 return GeneralResponse<List<SchedulingDto>>.ErrorResponse("Empty scheduling ");
 
-            var schedulingListDro = _mapper.Map<List<SchedulingDto>>(schedulingList);
+            var schedulingListDto = _mapper.Map<List<SchedulingDto>>(schedulingList);
 
-            return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDro);
+            return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDto);
         }
 
+        public async Task<GeneralResponse<List<SchedulingDto>>> SchedulingByEmployeeIdAndDayNameAsync(int employeeId, string dayName, params Expression<Func<Scheduling, object>>[] includes)
+        {
+            var employeeSchedulingList = await _schedulingRepository.SchedulingByEmployeeId(employeeId, dayName);
+            if (employeeSchedulingList == null)
+                return GeneralResponse<List<SchedulingDto>>
+                    .ErrorResponse($"Empty scheduling for employee with Id : {employeeId} at day {dayName} ");
+
+            var schedulingListDto = _mapper.Map<List<SchedulingDto>>(employeeSchedulingList);
+
+            return GeneralResponse<List<SchedulingDto>>.Succsess(schedulingListDto);
+        }
     }
 }

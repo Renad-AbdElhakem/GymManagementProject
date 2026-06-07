@@ -2,6 +2,7 @@
 using FluentValidation;
 using GymManagement.AutoMapper;
 using GymManagement.Data;
+using GymManagement.Domain;
 using GymManagement.IRepositories;
 using GymManagement.IRepositories.Repositories;
 using GymManagement.IServices;
@@ -34,6 +35,7 @@ namespace GymManagement
                 cfg.AddProfile<MemberProfile>();
                 cfg.AddProfile<SubscriptionTypeMappingProfile>();
                 cfg.AddProfile<AttendanceMemberProfile>();
+                cfg.AddProfile<EmployeeAttendanceProfile>();
               
             });
 
@@ -50,6 +52,7 @@ namespace GymManagement
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<ISubscriptionTypeRepository, SubscriptionTypeRepository>();
             builder.Services.AddScoped<IMemberAttendanceRepository, MemberAttendanceRepository>();
+            builder.Services.AddScoped<IEmployeeAttendanceRepository, EmployeeAttendanceRepository>();
 
 
 
@@ -63,6 +66,7 @@ namespace GymManagement
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
             builder.Services.AddScoped<IMemberAttendanceService, MemberAttendanceService>();
+            builder.Services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
            
           
             

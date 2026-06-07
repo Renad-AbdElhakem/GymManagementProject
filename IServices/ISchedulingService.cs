@@ -9,6 +9,11 @@ namespace GymManagement.IServices
         Task<GeneralResponse<SchedulingDto>> CreateTrainerDayScheduling(CreateSchedulingDto createSchedulingDto);
         Task<GeneralResponse<List<SchedulingDto>>> GetSchedulingByRoleId(int roleId);
         Task<GeneralResponse<SchedulingDto>> SchedullingById(int id);
+
+        Task<GeneralResponse<List<SchedulingDto>>>
+            SchedulingByEmployeeIdAndDayNameAsync(int employeeId, string dayName, params Expression<Func<Scheduling, object>>[] includes);
+
+
         Task<GeneralResponse<List<SchedulingDto>>>SchedullingList();
         Task<GeneralResponse<SchedulingDto>> DeleteSchedullingById(int id);
         Task<GeneralResponse<List<SchedulingDto>>> SchedulingByDayName(string dayName,

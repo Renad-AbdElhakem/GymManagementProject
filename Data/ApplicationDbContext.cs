@@ -20,9 +20,9 @@ namespace GymManagement.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<WeekDays> WeekDays { get; set; }
         public DbSet<Scheduling> Schedulings { get; set; }
-      
-        
-        
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,8 +30,10 @@ namespace GymManagement.Data
             modelBuilder.Entity<BaseUser>().UseTpcMappingStrategy();
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-          
 
+            modelBuilder.Entity<EmployeeAttendance>()
+                .HasIndex(a => new { a.EmployeeId, a.Date })
+                .IsUnique();
         }
     }
 }

@@ -3,12 +3,16 @@ using FluentValidation;
 using GymManagement.AutoMapper;
 using GymManagement.Data;
 using GymManagement.Domain;
+using GymManagement.Event;
+using GymManagement.Helper;
 using GymManagement.IRepositories;
 using GymManagement.IRepositories.Repositories;
 using GymManagement.IServices;
 using GymManagement.IServices.Services;
+using GymManagement.IServices.SMS;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using System;
 
 namespace GymManagement
 {
@@ -67,11 +71,16 @@ namespace GymManagement
             builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
             builder.Services.AddScoped<IMemberAttendanceService, MemberAttendanceService>();
             builder.Services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
-           
-          
-            
-            
-            
+
+
+            builder.Services.AddHostedService<SubscriptionExpiryWorker>();
+            builder.Services.AddSingleton<IEventPublisher, EventPublisher>();
+            builder.Services.AddScoped<IEventHandler<SubscriptionAboutToExpireEvent>, SubscriptionSmsHandler>();
+
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
+            builder.Services.AddScoped<ISmsService, SmsService>();
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

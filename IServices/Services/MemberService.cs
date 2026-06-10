@@ -4,6 +4,7 @@ using GymManagement.Domain;
 using GymManagement.Dtos;
 using GymManagement.IRepositories;
 using GymManagement.IRepositories.Repositories;
+using System.Linq.Expressions;
 
 namespace GymManagement.IServices.Services
 {
@@ -102,6 +103,19 @@ namespace GymManagement.IServices.Services
             var member = _mapper.Map<List<MemberDto>>(findMembers);
             return GeneralResponse<List<MemberDto>>.Succsess(member);
         }
+
+        public async Task<GeneralResponse<List<MemberDto>>> GetMembersExpiringSoon()
+        {
+
+            var findMembers = await _memberRepository.GetAllByCondition(m => m.subscriptionEndDate.HasValue &&
+                                                     m.subscriptionEndDate.Value == DateOnly.FromDateTime(DateTime.Today.AddDays(7)) && m.AvailableDays > 0);
+            if (findMembers == null)
+                return GeneralResponse<List<MemberDto>>.ErrorResponse("No members found");
+
+            var member = _mapper.Map<List<MemberDto>>(findMembers);
+            return GeneralResponse<List<MemberDto>>.Succsess(member);
+        }
+
         public async Task<GeneralResponse<MemberDto>> DeactivatedMemberByIdService(int memberId)
         {
 
@@ -119,13 +133,13 @@ namespace GymManagement.IServices.Services
 
         public async Task<GeneralResponse<MemberDto>> AssignPrivateTrainerAsync(int memberId, AssignTrainerDto privateMemberDto)
         {
-            
+
             var member = await _memberRepository.GetTById(memberId, x => x.MembershipPlans, x => x.Employee);
 
             if (member == null)
                 return GeneralResponse<MemberDto>.ErrorResponse($"Member with ID {memberId} not found.");
 
-           
+
             var trainer = await _employeeService.GetEmployeeById(privateMemberDto.TrainerId);
 
             if (trainer == null || !trainer.IsActive)
@@ -141,7 +155,7 @@ namespace GymManagement.IServices.Services
         }
 
 
-      // R   
+        // R   
         public async Task UpdateAvailableDaysAsync(UpdateAvailableDaysForMemberDto dto)
         {
             var member = await _memberRepository.GetTById(dto.MemberId);
@@ -149,7 +163,7 @@ namespace GymManagement.IServices.Services
 
             member.AvailableDays = dto.AvailableDays;
             await _memberRepository.UpdateAsync(member);
-        
+
         }
 
 

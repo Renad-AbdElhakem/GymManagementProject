@@ -75,12 +75,12 @@ namespace GymManagement.IServices.Services
 
             employeeAttendance.ClockOut = checkOutTime;
 
-            //1- Get EmployeeScheduling for sepicific EmployeeId and  dayName
+            //1-
             var employeeSchedulling = await _schedulingService.SchedulingByEmployeeIdAndDayNameAsync(dto.EmployeeId, day);
             if (!employeeSchedulling.Success)
                 return employeeSchedulling.Message;
 
-            //1- check employee attednace vs schedulling
+            //2- 
             var lastEndTimeOntheDayScheduling = employeeSchedulling.Data.LastOrDefault();
 
             if (lastEndTimeOntheDayScheduling.EndTime.AddHours(1) < checkOutTime)

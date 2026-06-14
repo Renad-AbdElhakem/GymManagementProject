@@ -33,7 +33,7 @@ namespace GymManagement.IServices.Services
 
         public async Task<List<EmployeeDto>?> GetAllEmployee()
         {
-            var employees = await _employeeRepository.GetAll();
+            var employees = await _employeeRepository.GetAll(e=>e.Role);
            
             if (employees == null)
                 return new List<EmployeeDto>();

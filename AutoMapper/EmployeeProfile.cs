@@ -9,7 +9,7 @@ namespace GymManagement.AutoMapper
         public EmployeeProfile()
         {
             CreateMap<AddNewEmployeeDto, Employee>();
-          
+      
             CreateMap<Employee, EmployeeDto>()
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName));
 

@@ -4,10 +4,11 @@ using GymManagement.Domain;
 using GymManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace GymManagement.IRepositories.Repositories
 {
-    public class GeneralRepository<T> : IGeneralRepository<T> where T : BaseUser
+    public class GeneralRepository<T> : IGeneralRepository<T> where T : BaseEntity
     {
         private readonly ApplicationDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
@@ -26,11 +27,14 @@ namespace GymManagement.IRepositories.Repositories
             return entity;
         }
 
-
-
         public async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task Delete(T entity)
+        {
+            _dbSet.Remove(entity);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -42,14 +46,48 @@ namespace GymManagement.IRepositories.Repositories
                 query = query.Include(include);
             }
 
-            return await query.FirstOrDefaultAsync(x => x.Id == x.Id);
+            return await query.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> GetAll(params Expression<Func<T, object>>[] includes)
         {
             var query = _dbSet.AsQueryable();
-            query = query.Include(e => e.Role);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
             return await query.ToListAsync();
         }
+
+        public async Task<List<T>> SchedulingByDayId(int dayId, params Expression<Func<T, object>>[] includes)
+
+        {
+
+            var query = _dbSet.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.Where(s => s.Id == dayId).ToListAsync();
+
+        }
+        public async Task<List<T>?> GetAllByCondition(Expression<Func<T, bool>> condition, params Expression<Func<T, object>>[] Includes)
+        {
+            var query = _dbSet.AsQueryable();
+
+            if (Includes != null && Includes.Any())
+            {
+                foreach (var include in Includes)
+                {
+                    query = query.Include(include);
+                }
+                
+            }
+            var result =  await query.Where(condition).ToListAsync();
+            return result;
+
+        }
+
     }
 }

@@ -12,7 +12,13 @@ namespace GymManagement.Configrations
                    .WithOne(m => m.Member);
 
             builder.HasOne(p => p.MembershipPlans)
-                   .WithMany(p=>p.Members);
+                   .WithMany(p => p.Members)
+                   .HasForeignKey(p=>p.MemberPlanId);
+
+
+            builder.HasOne(t => t.Employee)
+                   .WithMany(e => e.PrivateMembers)
+                   .HasForeignKey(m => m.PrivateTrainerId);
         }
     }
 }

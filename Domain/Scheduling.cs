@@ -1,8 +1,8 @@
 ﻿namespace GymManagement.Domain
 {
-    public class Scheduling
+    public class Scheduling:BaseEntity
     {
-        public int Id { get; set; }
+        
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
 

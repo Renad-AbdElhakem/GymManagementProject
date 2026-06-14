@@ -40,6 +40,7 @@ namespace GymManagement
                 cfg.AddProfile<SubscriptionTypeMappingProfile>();
                 cfg.AddProfile<AttendanceMemberProfile>();
                 cfg.AddProfile<EmployeeAttendanceProfile>();
+                cfg.AddProfile<LeaveRequestProfile>();
               
             });
 
@@ -57,6 +58,8 @@ namespace GymManagement
             builder.Services.AddScoped<ISubscriptionTypeRepository, SubscriptionTypeRepository>();
             builder.Services.AddScoped<IMemberAttendanceRepository, MemberAttendanceRepository>();
             builder.Services.AddScoped<IEmployeeAttendanceRepository, EmployeeAttendanceRepository>();
+            builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+            builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
 
 
@@ -71,14 +74,15 @@ namespace GymManagement
             builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
             builder.Services.AddScoped<IMemberAttendanceService, MemberAttendanceService>();
             builder.Services.AddScoped<IEmployeeAttendanceService, EmployeeAttendanceService>();
+            builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 
 
-            builder.Services.AddHostedService<SubscriptionExpiryWorker>();
-            builder.Services.AddSingleton<IEventPublisher, EventPublisher>();
-            builder.Services.AddScoped<IEventHandler<SubscriptionAboutToExpireEvent>, SubscriptionSmsHandler>();
+            //builder.Services.AddHostedService<SubscriptionExpiryWorker>();
+            //builder.Services.AddSingleton<IEventPublisher, EventPublisher>();
+            //builder.Services.AddScoped<IEventHandler<SubscriptionAboutToExpireEvent>, SubscriptionSmsHandler>();
 
-            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
-            builder.Services.AddScoped<ISmsService, SmsService>();
+            //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
+            //builder.Services.AddScoped<ISmsService, SmsService>();
 
 
             var app = builder.Build();

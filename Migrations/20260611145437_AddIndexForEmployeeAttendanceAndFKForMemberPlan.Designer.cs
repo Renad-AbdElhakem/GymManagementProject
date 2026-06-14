@@ -4,6 +4,7 @@ using GymManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260611145437_AddIndexForEmployeeAttendanceAndFKForMemberPlan")]
+    partial class AddIndexForEmployeeAttendanceAndFKForMemberPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,128 +130,6 @@ namespace GymManagement.Migrations
                         .HasFilter("[EmployeeId] IS NOT NULL");
 
                     b.ToTable("EmployeeAttendance");
-                });
-
-            modelBuilder.Entity("GymManagement.Domain.LeaveRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ApprovedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ApprovedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
-
-                    b.Property<int?>("LeaveTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RejectionReason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalDays")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("LeaveTypeId");
-
-                    b.ToTable("LeaveRequests");
-                });
-
-            modelBuilder.Entity("GymManagement.Domain.LeaveType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MaxDaysPerYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("RequiresApproval")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LeaveTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Sick leave for health-related reasons.",
-                            IsActive = true,
-                            MaxDaysPerYear = 10,
-                            Name = "Sick Leave",
-                            RequiresApproval = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Annual vacation leave.",
-                            IsActive = true,
-                            MaxDaysPerYear = 21,
-                            Name = "Vacation",
-                            RequiresApproval = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Personal leave for private matters.",
-                            IsActive = true,
-                            MaxDaysPerYear = 5,
-                            Name = "Personal Leave",
-                            RequiresApproval = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Emergency leave that does not require approval.",
-                            IsActive = true,
-                            MaxDaysPerYear = 3,
-                            Name = "Emergency Leave",
-                            RequiresApproval = false
-                        });
                 });
 
             modelBuilder.Entity("GymManagement.Domain.MemberAttendance", b =>
@@ -405,7 +286,7 @@ namespace GymManagement.Migrations
                             PhoneNumber = "010555454545",
                             RoleId = 1,
                             UserName = "RenadAbdelhakem",
-                            HireDate = new DateOnly(2026, 6, 13),
+                            HireDate = new DateOnly(2026, 6, 11),
                             IsActive = true,
                             Salary = 0m
                         });
@@ -472,21 +353,6 @@ namespace GymManagement.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("GymManagement.Domain.LeaveRequest", b =>
-                {
-                    b.HasOne("GymManagement.Domain.Employee", "Employee")
-                        .WithMany("LeaveRequests")
-                        .HasForeignKey("EmployeeId");
-
-                    b.HasOne("GymManagement.Domain.LeaveType", "LeaveType")
-                        .WithMany("LeaveRequests")
-                        .HasForeignKey("LeaveTypeId");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("LeaveType");
-                });
-
             modelBuilder.Entity("GymManagement.Domain.MemberAttendance", b =>
                 {
                     b.HasOne("GymManagement.Domain.Member", "Member")
@@ -543,11 +409,6 @@ namespace GymManagement.Migrations
                     b.Navigation("Schedulings");
                 });
 
-            modelBuilder.Entity("GymManagement.Domain.LeaveType", b =>
-                {
-                    b.Navigation("LeaveRequests");
-                });
-
             modelBuilder.Entity("GymManagement.Domain.Role", b =>
                 {
                     b.Navigation("BaseUsers");
@@ -570,8 +431,6 @@ namespace GymManagement.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("EmployeeAttendancecs");
-
-                    b.Navigation("LeaveRequests");
 
                     b.Navigation("PrivateMembers");
 

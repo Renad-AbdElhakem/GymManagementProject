@@ -25,7 +25,7 @@ namespace GymManagement.Validation
 
         private async Task<bool> IsEmployeeActive(AttendanceRequestDto dto, CancellationToken token)
         {
-            return await _dbContext.Employee.AnyAsync(e => e.IsActive);
+            return await _dbContext.Employee.AnyAsync(e => e.Id == dto.EmployeeId && e.IsActive);
         }
 
         private async Task<bool> IsEmployeeIdValid(AttendanceRequestDto dto, CancellationToken token)

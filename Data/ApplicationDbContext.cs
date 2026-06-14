@@ -20,6 +20,9 @@ namespace GymManagement.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<WeekDays> WeekDays { get; set; }
         public DbSet<Scheduling> Schedulings { get; set; }
+        public DbSet<LeaveType>  LeaveTypes { get; set; }
+        public DbSet<LeaveRequest> LeaveRequests  { get; set; }
+      
 
 
 

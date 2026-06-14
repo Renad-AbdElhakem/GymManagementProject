@@ -13,6 +13,8 @@
         public ICollection<EmployeeAttendance> ? EmployeeAttendancecs { get; set; } = new List<EmployeeAttendance>();
         public ICollection<Scheduling>? Schedulings { get; set; } = new List<Scheduling>();
         public ICollection<Member>? PrivateMembers { get; set; } = new List<Member>();
+        public ICollection<LeaveRequest>?  LeaveRequests { get; set; } = new List<LeaveRequest>();
+     
        
 
     }

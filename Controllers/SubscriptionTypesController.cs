@@ -7,11 +7,11 @@ namespace GymManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubscriptionTypeController : ControllerBase
+    public class SubscriptionTypesController : ControllerBase
     {
         private readonly ISubscriptionTypeService _service;
 
-        public SubscriptionTypeController(ISubscriptionTypeService service)
+        public SubscriptionTypesController(ISubscriptionTypeService service)
         {
             _service = service;
         }

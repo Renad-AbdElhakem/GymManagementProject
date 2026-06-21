@@ -15,9 +15,9 @@ namespace GymManagement.IServices.Services
             _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
-       
-        
-        
+
+
+
         public async Task<EmployeeDto> AddNewEmployee(AddNewEmployeeDto newEmployeeDto)
         {
 
@@ -26,19 +26,19 @@ namespace GymManagement.IServices.Services
             var createdEmployee = await _employeeRepository.CreateNewAsync(addNewEmployee);
 
             var employee = _mapper.Map<EmployeeDto>(createdEmployee);
-       
+
             return employee;
-       
+
         }
 
         public async Task<List<EmployeeDto>?> GetAllEmployee()
         {
-            var employees = await _employeeRepository.GetAll(e=>e.Role);
-           
+            var employees = await _employeeRepository.GetAll(e => e.Role);
+
             if (employees == null)
                 return new List<EmployeeDto>();
 
-            var emploueListAutoMapper=_mapper.Map<List<EmployeeDto>>(employees);
+            var emploueListAutoMapper = _mapper.Map<List<EmployeeDto>>(employees);
 
             return emploueListAutoMapper;
         }
@@ -46,9 +46,9 @@ namespace GymManagement.IServices.Services
         public async Task<EmployeeDto> GetEmployeeById(int id)
         {
             var getEmployee = await _employeeRepository.GetTById(id, e => e.Role);
-           
+
             if (getEmployee == null) { return null; }
-           
+
             var employee = _mapper.Map<EmployeeDto>(getEmployee);
 
 

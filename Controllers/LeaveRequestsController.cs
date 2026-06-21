@@ -9,21 +9,21 @@ namespace GymManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LeaveRequestController : ControllerBase
+    public class LeaveRequestsController : ControllerBase
     {
         private readonly ILeaveRequestService _leaveRequestService;
         private readonly IValidator<CreateLeaveRequestDto> _validator;
 
-        public LeaveRequestController(ILeaveRequestService leaveRequestService,IValidator<CreateLeaveRequestDto> validator)
+        public LeaveRequestsController(ILeaveRequestService leaveRequestService, IValidator<CreateLeaveRequestDto> validator)
         {
-           _leaveRequestService = leaveRequestService;
-           _validator = validator;
+            _leaveRequestService = leaveRequestService;
+            _validator = validator;
         }
 
 
         [HttpPost]
-        [Authorize(Roles = "Employee")]
-        public async Task<IActionResult> CreateLeaveRequest([FromBody] CreateLeaveRequestDto requestDto)
+        //[Authorize(Roles = "Employee")]
+        public async Task<ActionResult<LeaveRequestDto>> CreateLeaveRequest([FromBody] CreateLeaveRequestDto requestDto)
         {
             var validationResult = await _validator.ValidateAsync(requestDto);
             if (!validationResult.IsValid)
@@ -40,7 +40,8 @@ namespace GymManagement.Controllers
 
             }
             var result = await _leaveRequestService.CreateLeaveRequest(requestDto);
-            return Ok(result);
+
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
         [HttpGet("MyLeaveRequests")]
@@ -69,7 +70,7 @@ namespace GymManagement.Controllers
 
         [HttpPut("{id}/approve")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> ApproveLeaveRequest(int id, [FromQuery]int approvedByUserId)
+        public async Task<IActionResult> ApproveLeaveRequest(int id, [FromQuery] int approvedByUserId)
         {
             var result = await _leaveRequestService.ApproveLeaveRequest(id, approvedByUserId);
             return Ok(result);

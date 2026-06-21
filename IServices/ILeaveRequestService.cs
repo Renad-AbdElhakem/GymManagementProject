@@ -5,7 +5,7 @@ namespace GymManagement.IServices
 {
     public interface ILeaveRequestService
     {
-        Task<string> CreateLeaveRequest(CreateLeaveRequestDto requestDto);
+        Task<GeneralResponse<LeaveRequestDto>> CreateLeaveRequest(CreateLeaveRequestDto requestDto);
 
         Task<List<LeaveRequestDto>> GetMyLeaveRequests(int employeeId);
 

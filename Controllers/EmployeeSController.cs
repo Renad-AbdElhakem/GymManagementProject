@@ -11,19 +11,19 @@ namespace GymManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class EmployeeSController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
         private readonly IValidator<AddNewEmployeeDto> _validator;
 
-        public EmployeeController(IEmployeeService employeeService, IValidator<AddNewEmployeeDto> validator)
+        public EmployeeSController(IEmployeeService employeeService, IValidator<AddNewEmployeeDto> validator)
         {
             _employeeService = employeeService;
             _validator = validator;
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddNewEmployee(AddNewEmployeeDto newEmployeeDto)
+        public async Task<ActionResult<EmployeeDto>> AddNewEmployee(AddNewEmployeeDto newEmployeeDto)
         {
 
             var validationResult = await _validator.ValidateAsync(newEmployeeDto);
@@ -38,15 +38,16 @@ namespace GymManagement.Controllers
                             PropertyField = e.PropertyName,
                             Message = e.ErrorMessage,
                         })
-                  });
+                    });
 
             }
 
             var employee = await _employeeService.AddNewEmployee(newEmployeeDto);
 
             return CreatedAtAction(
-                   nameof(GetEmployeeById),
-                   new { id = employee.Id });
+                  nameof(GetEmployeeById),
+                  new { id = employee.Id },
+                  employee);
 
 
         }

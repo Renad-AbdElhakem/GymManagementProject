@@ -19,17 +19,18 @@ namespace GymManagement.IServices.Services
         }
 
 
-        public async Task<string> CreateLeaveRequest(CreateLeaveRequestDto requestDto)
+        public async Task<GeneralResponse<LeaveRequestDto>> CreateLeaveRequest(CreateLeaveRequestDto requestDto)
         {
             var overlappingLeaveRequests = await _leaveRequestRepository.GetAllByCondition(l => l.EmployeeId == requestDto.EmployeeId
                                                                                            && l.StartDate <= requestDto.EndDate
                                                                                            && l.EndDate >= requestDto.StartDate
                                                                                            , l => l.LeaveType);
 
-            if (overlappingLeaveRequests != null)
-                return "You already have a leave request during the selected period.";
+            if (overlappingLeaveRequests.Any())
+                return GeneralResponse<LeaveRequestDto>.ErrorResponse("You already have a leave request during the selected period.");
 
             var leaveType = await _leaveTypeRepository.GetTById(requestDto.LeaveTypeId);
+            
 
             var employeeLeaveRequests = await _leaveRequestRepository.GetAllByCondition(l => l.EmployeeId == requestDto.EmployeeId
                                                                                      && l.LeaveTypeId == requestDto.LeaveTypeId
@@ -41,11 +42,14 @@ namespace GymManagement.IServices.Services
             var totalDaysAfterRequest = employeeLeaveRequests.Sum(t => t.TotalDays) + newLeaveRequest.TotalDays;
 
             if (newLeaveRequest.TotalDays > leaveType.MaxDaysPerYear || totalDaysAfterRequest > leaveType.MaxDaysPerYear)
-                return "You have exceeded the maximum allowed days for this leave type.";
+                return GeneralResponse<LeaveRequestDto>.ErrorResponse("You have exceeded the maximum allowed days for this leave type.");
 
 
             await _leaveRequestRepository.CreateNewAsync(newLeaveRequest);
-            return "Leave request created successfully.";
+
+            var leaveRequestDto = _mapper.Map<LeaveRequestDto>(newLeaveRequest);
+
+            return GeneralResponse<LeaveRequestDto>.Succsess(leaveRequestDto, "Leave request created successfully.");
 
         }
 
@@ -104,7 +108,7 @@ namespace GymManagement.IServices.Services
 
             leaveRequest.Status = "Rejected";
             leaveRequest.ApprovedByUserId = rejectLeaveRequest.ApprovedByUserId;
-            leaveRequest.RejectionReason = rejectLeaveRequest.RejectionReason ;
+            leaveRequest.RejectionReason = rejectLeaveRequest.RejectionReason;
             leaveRequest.UpdatedAt = DateTime.Now;
 
             await _leaveRequestRepository.UpdateAsync(leaveRequest);

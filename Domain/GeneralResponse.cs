@@ -7,7 +7,7 @@ namespace GymManagement.Domain
         public T Data { get; set; }
         public bool Success { get; set; }
         public string Message { get; set; }
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; } = new List<string>();
 
         public static GeneralResponse<T> Succsess(T data, string message = null)
         {
@@ -16,7 +16,7 @@ namespace GymManagement.Domain
         }
         public static GeneralResponse<T> ErrorResponse(string message, List<string>? errors = null)
         {
-            return new GeneralResponse<T> { Message = message, Success = false };
+            return new GeneralResponse<T> { Message = message, Success = false, Errors = errors };
 
         }
     }

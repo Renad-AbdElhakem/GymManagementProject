@@ -8,12 +8,12 @@ namespace GymManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CourseController : ControllerBase
+    public class ClassesController : ControllerBase
     {
         private readonly ICourseService _courseService;
         private readonly ISchedulingService _schedulingService;
 
-        public CourseController(ICourseService courseService, ISchedulingService schedulingService)
+        public ClassesController(ICourseService courseService, ISchedulingService schedulingService)
         {
             _courseService = courseService;
             _schedulingService = schedulingService;

@@ -21,7 +21,7 @@ namespace GymManagement.Validation
                    .GreaterThanOrEqualTo(l => l.StartDate)
                    .WithMessage("EndDate must be greater than StartDate");
 
-            RuleFor(l => l.Reason).Length(50, 200);
+            RuleFor(l => l.Reason).Length(30, 100);
 
             RuleFor(a => a)
                 .MustAsync(IsEmployeeIdValid)

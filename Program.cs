@@ -10,6 +10,7 @@ using GymManagement.IRepositories.Repositories;
 using GymManagement.IServices;
 using GymManagement.IServices.Services;
 using GymManagement.IServices.SMS;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using System;
@@ -41,10 +42,10 @@ namespace GymManagement
                 cfg.AddProfile<AttendanceMemberProfile>();
                 cfg.AddProfile<EmployeeAttendanceProfile>();
                 cfg.AddProfile<LeaveRequestProfile>();
-              
+
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(option=>
+            builder.Services.AddDbContext<ApplicationDbContext>(option =>
             option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -53,7 +54,7 @@ namespace GymManagement
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<IWeekDaysRepository, WeekDaysRepository>();
-            builder.Services.AddScoped<ISchedulingRepository,SchedulingRepository>();
+            builder.Services.AddScoped<ISchedulingRepository, SchedulingRepository>();
             builder.Services.AddScoped<IMemberRepository, MemberRepository>();
             builder.Services.AddScoped<ISubscriptionTypeRepository, SubscriptionTypeRepository>();
             builder.Services.AddScoped<IMemberAttendanceRepository, MemberAttendanceRepository>();
@@ -67,9 +68,9 @@ namespace GymManagement
 
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IEmployeeService, EmployeesService>();
-            builder.Services.AddScoped<ICourseService,CourseService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IWeekDaysService, WeekDaysService>();
-            builder.Services.AddScoped<ISchedulingService,SchedulingService>();
+            builder.Services.AddScoped<ISchedulingService, SchedulingService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<ISubscriptionTypeService, SubscriptionTypeService>();
             builder.Services.AddScoped<IMemberAttendanceService, MemberAttendanceService>();
@@ -84,7 +85,8 @@ namespace GymManagement
             //builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
             //builder.Services.AddScoped<ISmsService, SmsService>();
 
-
+            
+           
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -92,8 +94,9 @@ namespace GymManagement
             {
                 app.MapOpenApi();
                 app.MapScalarApiReference();
-            }
 
+            }
+           
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

@@ -22,10 +22,10 @@ namespace GymManagement.Controllers
         {
             var newMemberResult = await _memberService.RegisterMemberService(registerMemberDto);
 
-            return newMemberResult.Success ? Ok(newMemberResult) : BadRequest(newMemberResult);
+            return newMemberResult.Success ? Ok(newMemberResult) : BadRequest(newMemberResult.Message);
         }
 
-        [HttpPatch("{memberId}/Subscription")]
+        [HttpPatch("{memberId}/subscription")]
         public async Task<ActionResult<MemberDto>> RenewMember( int memberId, [FromBody] RenewMemberDto renewMemberDto)
         {
             var updateMemberResult = await _memberService.RenewMemberService(memberId,renewMemberDto);
@@ -33,7 +33,7 @@ namespace GymManagement.Controllers
             return updateMemberResult.Success ? Ok(updateMemberResult) : NotFound(updateMemberResult);
         }
 
-        [HttpPatch("{memberId}/DeactivatedMember")]
+        [HttpPatch("{memberId}/deactivate")]
         public async Task<ActionResult> DeactivatedMemberById(int memberId)
         {
             var member = await _memberService.DeactivatedMemberByIdService(memberId);
